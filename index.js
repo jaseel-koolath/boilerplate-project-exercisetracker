@@ -147,7 +147,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
         console.log("inside limit", limit, {
           log: filteredLogs,
         });
-        filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
+        filteredLogs.splice(0, limit);
         console.log(filteredLogs, "after limit filter");
       }
       res.json({
