@@ -76,13 +76,26 @@ app.post("/api/users/:_id/exercises", (req, res) => {
       res.status(500).json({ error: "Server error." });
     });
 });
+app.get("/api/users/", (req, res) => {
+  User.find()
+    .then((doc) => {
+      const result = doc.map((user) => ({
+        username: user.username,
+        _id: user._id,
+      }));
+      res.json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Server error." });
+    });
+});
 
 app.get("/api/users/:_id/logs", (req, res) => {
   const id = req.params._id;
   const from = req.query.from ? new Date(req.query.from) : null;
   const to = req.query.to ? new Date(req.query.to) : null;
   const filteredLogs = [];
-  const limit = isNaN(limit) ? null : Number(req.query.limit); // Optional parameter
+  const limit = isNaN(req.query.limit) ? null : Number(req.query.limit); // Optional parameter
   User.findById(id)
     .then((user) => {
       if (!user) {
@@ -113,6 +126,15 @@ app.get("/api/users/:_id/logs", (req, res) => {
         );
       }
       if (limit) filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
+      console.log({
+        username: user.username,
+        count: filteredLogs.length,
+        _id: user._id,
+        log: filteredLogs.map((log) => ({
+          ...log,
+          date: log.date.toDateString(),
+        })),
+      });
       res.json({
         username: user.username,
         count: filteredLogs.length,
