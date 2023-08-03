@@ -50,8 +50,12 @@ app.post("/api/users", (req, res) => {
 app.post("/api/users/:_id/exercises", (req, res) => {
   const id = req.params._id;
   const description = req.body.description;
-  const duration = Number(req.body.duration);
-  const date = new Date(req.body.date);
+  const duration = parseInt(req.body.duration);
+  let date = new Date(req.body.date);
+  if (isNaN(date.getTime())) {
+    // If the date is invalid, set it to today's date
+    date = new Date();
+  }
 
   User.findOneAndUpdate(
     { _id: id },
