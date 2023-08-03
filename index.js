@@ -117,6 +117,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
       }
       if (from instanceof Date && !isNaN(from.getTime())) {
         // 'from' is a valid date
+        console.log(filteredLogs, "before from filter");
         filteredLogs.splice(
           0,
           filteredLogs.length,
@@ -125,9 +126,12 @@ app.get("/api/users/:_id/logs", (req, res) => {
             return from <= date;
           })
         );
+        console.log(filteredLogs, "After from filter");
       }
       if (to instanceof Date && !isNaN(to.getTime())) {
         // 'to' is a valid date
+        console.log(filteredLogs, "before to filter");
+
         filteredLogs.splice(
           0,
           filteredLogs.length,
@@ -136,14 +140,16 @@ app.get("/api/users/:_id/logs", (req, res) => {
             return to >= date;
           })
         );
+        console.log(filteredLogs, "after to filter");
       }
-      if (limit) filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
-      console.log({
-        username: user.username,
-        count: user.log.length,
-        _id: user._id,
-        log: filteredLogs,
-      });
+      if (limit) {
+        console.log("inside limit", {
+          log: filteredLogs,
+        });
+        filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
+        console.log(filteredLogs, "after limit filter");
+      }
+      
       res.json({
         username: user.username,
         count: filteredLogs.length,
