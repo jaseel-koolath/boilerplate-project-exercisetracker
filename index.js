@@ -99,7 +99,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
   const from = req.query.from ? new Date(req.query.from) : null;
   const to = req.query.to ? new Date(req.query.to) : null;
   const filteredLogs = [];
-  const limit = isNaN(req.query.limit) ? null : Number(req.query.limit); // Optional parameter
+  const limit = isNaN(req.query.limit) ? null : parseInt(req.query.limit); // Optional parameter
   User.findById(id)
     .then((user) => {
       if (!user) {
@@ -117,7 +117,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
       }
       if (from instanceof Date && !isNaN(from.getTime())) {
         // 'from' is a valid date
-        console.log(filteredLogs, "before from filter");
+        console.log(filteredLogs, from.toDateString(), "before from filter");
         filteredLogs.splice(
           0,
           filteredLogs.length,
@@ -130,7 +130,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
       }
       if (to instanceof Date && !isNaN(to.getTime())) {
         // 'to' is a valid date
-        console.log(filteredLogs, "before to filter");
+        console.log(filteredLogs, to.toDateString(), "before to filter");
 
         filteredLogs.splice(
           0,
@@ -143,13 +143,12 @@ app.get("/api/users/:_id/logs", (req, res) => {
         console.log(filteredLogs, "after to filter");
       }
       if (limit) {
-        console.log("inside limit", {
+        console.log("inside limit", limit, {
           log: filteredLogs,
         });
         filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
         console.log(filteredLogs, "after limit filter");
       }
-      
       res.json({
         username: user.username,
         count: filteredLogs.length,
