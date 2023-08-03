@@ -106,11 +106,21 @@ app.get("/api/users/:_id/logs", (req, res) => {
         );
       }
       if (limit) filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
+      res.json({
+        username: user.username,
+        count: filteredLogs.length,
+        _id: user._id,
+        log: filteredLogs.map((log) => ({
+          ...log,
+          date: log.date.toDateString(),
+        })),
+      });
     })
     .catch((err) => {
       console.error(err);
       res.status(500).json({ error: "Server error." });
     });
+
   console.log(req.body);
 });
 
