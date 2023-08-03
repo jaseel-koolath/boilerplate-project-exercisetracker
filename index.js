@@ -120,8 +120,6 @@ app.get("/api/users/:_id/logs", (req, res) => {
       console.error(err);
       res.status(500).json({ error: "Server error." });
     });
-
-  console.log(req.body);
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
