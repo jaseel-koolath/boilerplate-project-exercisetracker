@@ -100,6 +100,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
   const to = req.query.to ? new Date(req.query.to) : null;
   const filteredLogs = [];
   const limit = isNaN(req.query.limit) ? null : parseInt(req.query.limit); // Optional parameter
+  console.log(id, from, to, limit);
   User.findById(id)
     .then((user) => {
       if (!user) {
