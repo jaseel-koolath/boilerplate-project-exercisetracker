@@ -102,7 +102,15 @@ app.get("/api/users/:_id/logs", (req, res) => {
         // Handle the case when user not found
         return res.status(404).json({ error: "User not found." });
       }
-      if (user?.logs?.length > 0) filteredLogs.push(...user.logs);
+      if (user?.log?.length > 0) {
+        filteredLogs.push(
+          ...user.log.map((item) => ({
+            description: item.description,
+            duration: item.duration,
+            date: item.date,
+          }))
+        );
+      }
       if (from instanceof Date && !isNaN(from.getTime())) {
         // 'from' is a valid date
         filteredLogs.splice(
@@ -128,16 +136,13 @@ app.get("/api/users/:_id/logs", (req, res) => {
       if (limit) filteredLogs.sort((a, b) => a.date - b.date).splice(0, limit);
       console.log({
         username: user.username,
-        count: filteredLogs.length,
+        count: user.log.length,
         _id: user._id,
-        log: filteredLogs.map((log) => ({
-          ...log,
-          date: log.date.toDateString(),
-        })),
+        log: filteredLogs,
       });
       res.json({
         username: user.username,
-        count: filteredLogs.length,
+        count: user.log.length,
         _id: user._id,
         log: filteredLogs.map((log) => ({
           ...log,
