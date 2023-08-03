@@ -146,7 +146,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
       });
       res.json({
         username: user.username,
-        count: user.log.length,
+        count: filteredLogs.length,
         _id: user._id,
         log: filteredLogs.map((log) => ({
           ...log,
